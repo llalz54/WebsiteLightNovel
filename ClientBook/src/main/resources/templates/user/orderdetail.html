@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="thymeleaf.org">
+
+<head>
+<!-- Basic -->
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<!-- Mobile Metas -->
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<!-- Site Metas -->
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="author" content="" />
+<link rel="shortcut icon" href="images/favicon.png" type="image/x-icon">
+
+<title>Light Novel</title>
+
+
+<!-- bootstrap core css -->
+<link rel="stylesheet" type="text/css"
+	th:href="@{/user/css/bootstrap.css}" />
+<!--owl slider stylesheet -->
+<link rel="stylesheet" type="text/css"
+	href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+
+<!-- font awesome style -->
+<link th:href="@{/user/css/font-awesome.min.css}" rel="stylesheet" />
+
+<!-- Custom styles for this template -->
+<link th:href="@{/user/css/style.css}" rel="stylesheet" />
+<!-- responsive style -->
+<link th:href="@{/user/css/responsive.css}" rel="stylesheet" />
+
+</head>
+
+<body class="sub_page">
+
+	<div class="hero_area">
+		<!-- header section strats -->
+		<nav th:replace="common/web/header::header"></nav>
+		<!-- end header section -->
+	</div>
+
+	<!-- about section -->
+
+	<div class="col-lg-12 my-4 mt-3 mb-3 card content"
+		style="border: 1px solid rgba(214, 214, 214, 0.493); min-height: 600px;">
+		<h5><a th:href="@{/order}"><i class="fa fa-arrow-left"></i>Trở lại</a></h5>
+		<div class="row m-5">
+			<table class="table table-bordered">
+                <thead>
+                    <tr class="text-center">
+                        <th>Tên sản phẩm</th>
+                        <th>Số lượng</th>
+                        <th>Đơn giá</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="item : ${orderDetail}">        
+                        <td th:text="${item.tenSach}"></td>
+                        <td class="text-center" th:text="${item.soLuong}"></td>
+                        <td class="text-center" th:text="${#numbers.formatDecimal(item.donGia.longValue(), 3,
+							'COMMA', 0, 'DEFAULT')}+ ' VNĐ'"></td>
+                    </tr>
+                </tbody>
+            </table>
+		</div>
+		</div>
+	<!-- end about section -->
+
+	<!-- footer section -->
+	<footer class="footer_section">
+		<footer id="footer" th:replace="common/web/footer::footer"></footer>
+	</footer>
+	<!-- footer section -->
+	<!-- jQery -->
+	<div th:replace="common/web/head::script"></div>
+</body>
+
+</html>
