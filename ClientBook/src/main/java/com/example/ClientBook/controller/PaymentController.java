@@ -43,13 +43,13 @@ public class PaymentController {
 	IDonHangService donHangService;
 	
 	
-	@GetMapping("/")
+	@GetMapping("/orderOnline")
 	public String index(Model model, HttpSession session){
 		model.addAttribute("loaiTTs", tieuThuyetService.getTT());
 		model.addAttribute("donhang", new DonHangDTO());
 		return "user/orderOnline";
 	}
-	@PostMapping("/")
+	@PostMapping("/orderOnline")
 	public String pay(HttpServletRequest request , HttpSession session ,@Valid @ModelAttribute("donhang") DonHangDTO donHang) throws PayPalRESTException{
 		String cancelUrl = Utils.getBaseURL(request) + "/" + URL_PAYPAL_CANCEL;
 		String successUrl = Utils.getBaseURL(request) + "/" + URL_PAYPAL_SUCCESS;
@@ -75,7 +75,7 @@ public class PaymentController {
 			}
 			
 			
-		return "redirect:/";
+		return "redirect:/orderOnline";
 	}
 	@GetMapping(URL_PAYPAL_CANCEL)
 	public String cancelPay(){
@@ -91,6 +91,6 @@ public class PaymentController {
 		} catch (PayPalRESTException e) {
 			log.error(e.getMessage());
 		}
-		return "redirect:/";
+		return "redirect:/orderOnline";
 	}
 }
