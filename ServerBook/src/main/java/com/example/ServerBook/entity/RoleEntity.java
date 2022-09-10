@@ -23,8 +23,12 @@ public class RoleEntity {
 	@Column(name ="role_name",nullable = false)
 	private String name;
 	
+	/*
+	 * @OneToMany(mappedBy = "role") private List<NhanVienEntity> nv = new
+	 * ArrayList<>();
+	 */
 	@OneToMany(mappedBy = "role")
-	private List<NhanVienEntity> nv = new ArrayList<>();
+	private List<KhachHangEntity> kh = new ArrayList<>();
 
 	public Long getId() {
 		return id;
@@ -42,14 +46,11 @@ public class RoleEntity {
 		this.name = name;
 	}
 
-	public List<NhanVienEntity> getNv() {
-		return nv;
-	}
-
-	public void setNv(List<NhanVienEntity> nv) {
-		this.nv = nv;
-	}
-	
+	/*
+	 * public List<NhanVienEntity> getNv() { return nv; }
+	 * 
+	 * public void setNv(List<NhanVienEntity> nv) { this.nv = nv; }
+	 */
 	
 	
 }

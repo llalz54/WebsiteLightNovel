@@ -28,7 +28,7 @@ public class PhieuNhapEntity {
 	
 	@ManyToOne
 	@JoinColumn(name ="MaNV",nullable = false)
-	private NhanVienEntity nhanVien;
+	private KhachHangEntity khachHangEntity;
 	
 	@Column(name ="NgayLap",nullable = false)
 	@CreatedDate
@@ -61,13 +61,16 @@ public class PhieuNhapEntity {
 
 
 
-	public NhanVienEntity getNhanVien() {
-		return nhanVien;
+	
+
+
+	public KhachHangEntity getKhachHangEntity() {
+		return khachHangEntity;
 	}
 
 
-	public void setNhanVien(NhanVienEntity nhanVien) {
-		this.nhanVien = nhanVien;
+	public void setKhachHangEntity(KhachHangEntity khachHangEntity) {
+		this.khachHangEntity = khachHangEntity;
 	}
 
 

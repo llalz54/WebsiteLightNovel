@@ -17,7 +17,7 @@ public class ConvertPhieuNhap {
 		if(entity.getId() != null)
 			dto.setIDPN(entity.getId());
 			dto.setNgayLap(entity.getNgayLap());
-			dto.setMaNV(entity.getNhanVien().getId());
+			dto.setMaNV(entity.getKhachHangEntity().getId());
 		return dto;
 	}
 	public PhieuNhapEntity toEntity(PhieuNhapDTO dto, PhieuNhapEntity entity) {

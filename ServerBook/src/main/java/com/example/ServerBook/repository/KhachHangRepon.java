@@ -17,10 +17,10 @@ import com.example.ServerBook.entity.KhachHangEntity;
 @Repository
 public interface KhachHangRepon extends JpaRepository<KhachHangEntity, Long> {
 	Page<KhachHangEntity> findAll(Pageable pageable);
-	@Query(value = "SELECT * FROM dbo.khach_hang WHERE ho_ten like %?1% ",
+	@Query(value = "SELECT * FROM dbo.users WHERE ho_ten like %?1% ",
 			nativeQuery = true)
 	List<KhachHangEntity> search(String kh);
-	@Query(value = "select * from dbo.khach_hang where email = ? and pass_word =?", nativeQuery = true)
+	@Query(value = "select * from dbo.users where email = ? and pass_word =?", nativeQuery = true)
 	KhachHangEntity FindByEmailAndPassWord(String email, String password);
 
 }

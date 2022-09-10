@@ -16,7 +16,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Nationalized;
 
 @Entity
-@Table(name = "KhachHang")
+@Table(name = "Users")
 public class KhachHangEntity {
 	@Id
 	@Column(name ="MaKH")
@@ -45,6 +45,9 @@ public class KhachHangEntity {
 	@OneToMany(mappedBy = "khachHang")
 	private List<CartEntity> cartKH = new ArrayList<>();
 	
+	@ManyToOne
+	@JoinColumn(name ="role_id",nullable = false)
+	private RoleEntity role;
 	
 	
 	public List<CartEntity> getCartKH() {
@@ -114,6 +117,14 @@ public class KhachHangEntity {
 	@Override
 	public String toString() {
 		return "KhachHangEntity [id=" + id + ", name=" + name + "]";
+	}
+
+	public RoleEntity getRole() {
+		return role;
+	}
+
+	public void setRole(RoleEntity role) {
+		this.role = role;
 	}
 	
 	

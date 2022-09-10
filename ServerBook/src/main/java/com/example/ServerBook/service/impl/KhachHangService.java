@@ -14,7 +14,9 @@ import org.springframework.stereotype.Service;
 import com.example.ServerBook.convert.ConvertKhachHang;
 import com.example.ServerBook.dto.KhachHangDTO;
 import com.example.ServerBook.entity.KhachHangEntity;
+import com.example.ServerBook.entity.RoleEntity;
 import com.example.ServerBook.repository.KhachHangRepon;
+import com.example.ServerBook.repository.RoleRepon;
 import com.example.ServerBook.service.IKhachHangService;
 
 
@@ -22,7 +24,8 @@ import com.example.ServerBook.service.IKhachHangService;
 public class KhachHangService implements IKhachHangService {
 	@Autowired
 	private KhachHangRepon khachHangRepon;
-	
+	@Autowired
+	private RoleRepon roleRepon;
 	@Autowired
 	private ConvertKhachHang convertKhachHang;
 	private final int PAGE_OFFSET =1;
@@ -40,6 +43,8 @@ public class KhachHangService implements IKhachHangService {
 		else {
 			kh = convertKhachHang.toEntity(dto);
 		}
+		RoleEntity role = roleRepon.findById(dto.getRole_id()).get();
+		kh.setRole(role);
 		kh = khachHangRepon.save(kh);
 		
 		return convertKhachHang.toDTO(kh);

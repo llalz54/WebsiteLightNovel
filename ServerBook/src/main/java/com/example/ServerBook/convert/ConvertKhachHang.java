@@ -16,6 +16,7 @@ public class ConvertKhachHang {
 			entity.setEmail(dto.getEmail());
 			entity.setPass(dto.getPass());
 			
+			
 		return entity;
 	}
 	public KhachHangDTO toDTO(KhachHangEntity entity) {
@@ -27,6 +28,7 @@ public class ConvertKhachHang {
 			dto.setSdt(entity.getSdt());
 			dto.setEmail(entity.getEmail());
 			dto.setPass(entity.getPass());
+			dto.setRole_id(entity.getRole().getId());
 		return dto;
 	}
 	public KhachHangEntity toEntity(KhachHangDTO dto, KhachHangEntity entity) {
