@@ -47,21 +47,21 @@ public class LoginController {
 	public String login(Model model,  @ModelAttribute("khachhang") KhachHangDTO khachhang, HttpSession session,BindingResult result) {
 	
 		List<KhachHangDTO> kh= khachHangService.getAllKH();
-		boolean check=false;
+		
 		for (KhachHangDTO user: kh) {
-			if((user.getEmail().equals(khachhang.getEmail()) && bCryptPasswordEncoder.matches(khachhang.getPass(), user.getPass()))
-				||(user.getEmail().equals(khachhang.getEmail()) && khachhang.getPass().equals(user.getPass())))  {
-				check=true;
+			if((user.getEmail().equals(khachhang.getEmail()) && bCryptPasswordEncoder.matches(khachhang.getPass(), user.getPass()) && user.getRole_id() ==1)
+				||(user.getEmail().equals(khachhang.getEmail()) && khachhang.getPass().equals(user.getPass()) && user.getRole_id() ==1))  {
 				session.setAttribute("user", user);
+				return "redirect:home";
 			}
+			else if((user.getEmail().equals(khachhang.getEmail()) && bCryptPasswordEncoder.matches(khachhang.getPass(), user.getPass()) && user.getRole_id() ==2)
+					||(user.getEmail().equals(khachhang.getEmail()) && khachhang.getPass().equals(user.getPass()) && user.getRole_id() ==2))  {
+					session.setAttribute("user", user);
+					return "redirect:admin/home";
+				}
 			
 		}
-		if(check) {
-			return "redirect:home";
-		}
-		else {
-			
-		}
+		
 		return "redirect:login?message=invalid";
 	}
 	

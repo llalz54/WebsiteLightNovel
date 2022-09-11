@@ -10,6 +10,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PagedListHolder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -49,6 +50,8 @@ public class AdminController {
 	IDonHangService donHangService;
 	@Autowired
 	ICTDHService ctdhService;
+	@Autowired
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
 	
 	@Autowired
 	private RestTemplate restTemplate;
@@ -132,12 +135,12 @@ public class AdminController {
 		if (pageNumber == null) pageNumber = 1; 
 		int pageSize = 10;
 		  PagedListHolder pages = new PagedListHolder<>(khachHangService.getAllKH());
-		  PagedListHolder pages1 = new PagedListHolder<>(nhanVienService.getAll());
+			/* PagedListHolder pages1 = new PagedListHolder<>(nhanVienService.getAll()); */
 		  pages.setPageSize(pageSize); 
-		  pages1.setPageSize(pageSize);
+			/* pages1.setPageSize(pageSize); */
 		  
 		  List list =(List) khachHangService.getAllKH(); 
-		  List list1 =(List) nhanVienService.getAll(); 
+			/* List list1 =(List) nhanVienService.getAll(); */
 		  if (pages == null) {
 			 } 
 		  else 
@@ -148,25 +151,21 @@ public class AdminController {
 				  pages.setPage(goToPage); 
 			  } 
 		  }
-		  if (pages1 == null) {
-			 } 
-		  else 
-		  { 
-			  final int goToPage = pageNumber - 1; 
-			  if (goToPage <= pages1.getPageCount() && goToPage >= 0) 
-			  { 
-				  pages1.setPage(goToPage); 
-			  } 
-		  }
+			/*
+			 * if (pages1 == null) { } else { final int goToPage = pageNumber - 1; if
+			 * (goToPage <= pages1.getPageCount() && goToPage >= 0) {
+			 * pages1.setPage(goToPage); } }
+			 */
 		  
 		  int current = pages.getPage() + 1; 
 		  int begin = Math.max(1, current - list.size()); 
 		  int end = Math.min(begin + 5, pages.getPageCount()); 
 		  int totalPageCount = pages.getPageCount(); 
-		  int current1 = pages1.getPage() + 1; 
-		  int begin1 = Math.max(1, current1 - list.size()); 
-		  int end1 = Math.min(begin1 + 5, pages1.getPageCount()); 
-		  int totalPageCount1 = pages1.getPageCount(); 
+			/*
+			 * int current1 = pages1.getPage() + 1; int begin1 = Math.max(1, current1 -
+			 * list.size()); int end1 = Math.min(begin1 + 5, pages1.getPageCount()); int
+			 * totalPageCount1 = pages1.getPageCount();
+			 */
 		  String baseUrl = "/admin/admin-account?page=";
 		  model.addAttribute("beginIndex", begin); 
 		  model.addAttribute("endIndex", end);
@@ -174,20 +173,68 @@ public class AdminController {
 		  model.addAttribute("totalPageCount", totalPageCount);
 		  model.addAttribute("baseUrl", baseUrl); 
 		  model.addAttribute("khachhangs", pages);
-		 
-		  model.addAttribute("beginIndex1", begin1); 
-		  model.addAttribute("endIndex1", end1);
-	      model.addAttribute("currentIndex1", current1);
-		  model.addAttribute("totalPageCount1", totalPageCount1);
-		  model.addAttribute("nhanviens", pages1);
+			/*
+			 * model.addAttribute("beginIndex1", begin1); model.addAttribute("endIndex1",
+			 * end1); model.addAttribute("currentIndex1", current1);
+			 * model.addAttribute("totalPageCount1", totalPageCount1);
+			 * model.addAttribute("nhanviens", pages1);
+			 */
 		return "admin/account";
 	}
-	
-	@PostMapping("/admin-account-add")
-	public String addNV(Model model ) {
-		model.addAttribute("loaiTTs", tieuThuyetService.getTT());
-		model.addAttribute("tieuthuyet", new TieuThuyetDTO());
+	@RequestMapping("/admin-account-add")
+	public String addNV(Model model, @RequestParam(required = false) String message,
+			@RequestParam(required = false) String message1) {
+		
+		model.addAttribute("khachhang", new KhachHangDTO());
+		if (message != null) {
+			model.addAttribute("message", "Tài khoản đã tồn tại");
+		}
+		if (message1 != null) {
+			model.addAttribute("message1", "Tạo thành công");
+		}
+
 		return "admin/addaccount";
+	}
+	@PostMapping("/admin-account-add")
+	public String addNV(Model model,@Valid @ModelAttribute("khachhang") KhachHangDTO khachhang ) {
+		List<KhachHangDTO> kh = khachHangService.getAllKH();
+
+		for (KhachHangDTO user : kh) {
+			if (user.getEmail().equals(khachhang.getEmail())) {
+
+				return "redirect:/admin/admin-account-add?message=invalid";
+			}
+		}
+		khachhang.setRole_id((long)2);
+		khachhang.setPass(bCryptPasswordEncoder.encode(khachhang.getPass()));
+		khachHangService.save(khachhang);
+		return "redirect:/admin/admin-account-add?message1=invalid";
+	}
+	@GetMapping("/admin-account-edit")
+	public String editUser(Model model, HttpSession session, @RequestParam(name = "maNV", required = false) Long maNV,
+			@RequestParam(required = false) String message) {
+		KhachHangDTO user = (KhachHangDTO) session.getAttribute("user");
+		KhachHangDTO dto = khachHangService.findByMaKH(user.getMaKH());
+		if (message != null)
+			model.addAttribute("message", "Đã đổi thông tin thành công");
+
+		model.addAttribute("khachhang", dto);
+		return "admin/editaccount";
+	}
+
+	@PostMapping("/admin-account-edit")
+	public String editUser(HttpSession session, Model model, @Valid @ModelAttribute("khachhang") KhachHangDTO khachhang,
+			BindingResult result) {
+		if (result.hasErrors()) {
+			return "admin/editaccount";
+		}
+		KhachHangDTO dto = (KhachHangDTO) session.getAttribute("user");
+		khachhang.setMaKH((long) dto.getMaKH());
+		khachhang.setEmail(dto.getEmail());
+		khachhang.setRole_id(dto.getRole_id());
+		khachhang.setPass(bCryptPasswordEncoder.encode(khachhang.getPass()));
+		khachHangService.save(khachhang);
+		return "redirect:admin-account-edit?message=invalid";
 	}
 	
 	/*

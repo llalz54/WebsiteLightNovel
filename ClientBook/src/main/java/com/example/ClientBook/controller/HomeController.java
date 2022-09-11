@@ -120,6 +120,7 @@ public class HomeController {
 	public String changePass(Model model, HttpSession session, @RequestParam(name = "maKH", required = false) Long maKH,
 			@RequestParam(required = false) String message, @RequestParam(required = false) String message1,
 			@RequestParam(required = false) String message2) {
+		model.addAttribute("loaiTTs", tieuThuyetService.getTT());
 		KhachHangDTO user = (KhachHangDTO) session.getAttribute("user");
 		KhachHangDTO dto = khachHangService.findByMaKH(user.getMaKH());
 		model.addAttribute("khachhang", new KhachHangDTO());
@@ -154,6 +155,7 @@ public class HomeController {
 			khachHang.setDiaChi(dto.getDiaChi());
 			khachHang.setSdt(dto.getSdt());
 			khachHang.setTenKH(dto.getTenKH());
+			khachHang.setRole_id(dto.getRole_id());
 			khachHang.setPass(bCryptPasswordEncoder.encode(khachHang.getPass2()));
 			khachHangService.save(khachHang);
 			return "redirect:changepass-edit?message=invalid";
@@ -307,6 +309,7 @@ public class HomeController {
 				return "redirect:register?message=invalid";
 			}
 		}
+		khachhang.setRole_id((long)1);
 		khachhang.setPass(bCryptPasswordEncoder.encode(khachhang.getPass()));
 		khachHangService.save(khachhang);
 		return "redirect:register?message1=invalid";
@@ -379,6 +382,7 @@ public class HomeController {
 	@GetMapping("/user-edit")
 	public String editUser(Model model, HttpSession session, @RequestParam(name = "maKH", required = false) Long maKH,
 			@RequestParam(required = false) String message) {
+		model.addAttribute("loaiTTs", tieuThuyetService.getTT());
 		KhachHangDTO user = (KhachHangDTO) session.getAttribute("user");
 		KhachHangDTO dto = khachHangService.findByMaKH(user.getMaKH());
 		if (message != null)
@@ -399,6 +403,7 @@ public class HomeController {
 		khachhang.setMaKH((long) dto.getMaKH());
 		khachhang.setEmail(dto.getEmail());
 		khachhang.setPass(dto.getPass());
+		khachhang.setRole_id(dto.getRole_id());
 		khachHangService.save(khachhang);
 		return "redirect:user-edit?message=invalid";
 	}

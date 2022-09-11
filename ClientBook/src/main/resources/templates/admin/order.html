@@ -146,7 +146,31 @@
 																						</tr>
 																					</thead>
 																					<tbody>
-																						<th:block th:each="o : ${donhangs.pageList}">
+																						<th:block th:each="o : ${donhangs.pageList}" th:if="${o.trangthai==-1 || o.trangthai==2}">
+																							<tr>
+																								<th th:text="${o.IDDH}"></th>
+																								<th
+																									th:text="${#numbers.formatDecimal(o.tongGia.longValue(), 3,'COMMA', 0, 'DEFAULT')}+ ' VNĐ'"></th>
+																								<th
+																									th:text="${#dates.format(o.ngayLap, 'dd-MM-yyyy')}"></th>
+																								<th th:text="${o.tenKH}"></th>
+																								<th th:text="${o.diaChi}"></th>
+																								<th th:text="${o.sdt}"></th>
+																								<th th:text="${o.ghiChu}"></th>
+																								<th><a
+																									th:href="@{'/admin/admin-order/details?IDDH='+${o.IDDH}}"><span
+																										class="fa fa-info-circle">Chi tiết</span></a></th>
+																								<td class="text-center">
+																									<div th:if="${o.trangthai==-1}">
+																									<span class="badge bg-success">Đã nhận hàng</span>
+																									</div>	
+																									<div th:if="${o.trangthai==2}">
+																										<span class="badge badge-dark">Đã huỷ</span> 
+																									</div>										
+																								</td>
+																							</tr>
+																						</th:block>
+																						<th:block th:each="o : ${donhangs.pageList}" th:unless="${o.trangthai==-1 || o.trangthai==2}">
 																							<tr>
 																								<th th:text="${o.IDDH}"></th>
 																								<th
@@ -167,29 +191,27 @@
 																											class="btn btn-outline-success btn-sm">
 																										<i class="fa fa-check-circle"></i>
 																										</button>
-																									</a> | 	<a th:href="@{'/admin/admin-order/huydon?IDDH='+${o.IDDH}}" >
-																										<button type="button"
-																											class="btn btn-outline-success btn-sm">
-																										<i class="fa fa-remove text-danger"></i>
-																										</button>
-																									</a>
+																									</a>  
 																									</div>
 																									<div th:if="${o.trangthai==1}">
 																										<a th:href="@{'/admin/admin-order/thanhtoan?IDDH='+${o.IDDH}}" >
 																										<span class="badge badge-primary ">Đã xác nhận</span>
 																									</a>
 																									</div>
-																									<div th:if="${o.trangthai==-1}">
-																									<span class="badge bg-success">Đã nhận hàng</span>
-																									</div>
-																									<div th:if="${o.trangthai==2}">
-																										<span class="badge badge-dark">Đã huỷ</span> 
-																									</div>
+													
 																									<div th:if="${o.trangthai==3}">
 																										<a th:href="@{'/admin/admin-order/thanhtoan?IDDH='+${o.IDDH}}" >
 																										<span class="badge badge-primary ">Đã thanh toán</span>
 																									</a>
 																									</div>
+																								</td>
+																								<td class="text-center">
+																										<a th:href="@{'/admin/admin-order/huydon?IDDH='+${o.IDDH}}" >
+																										<button type="button"
+																											class="btn btn-outline-success btn-sm">
+																										<span>Huỷ Đơn</span>
+																										</button>
+																									</a>										
 																								</td>
 																							</tr>
 																						</th:block>
