@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<!-- Basic -->
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<!-- Mobile Metas -->
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<!-- Site Metas -->
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="author" content="" />
+<link rel="shortcut icon" href="images/favicon.png" type="image/x-icon">
+
+<title>Light Novel</title>
+
+
+<!-- bootstrap core css -->
+<link rel="stylesheet" type="text/css" href="user/css/bootstrap.css" />
+<!--owl slider stylesheet -->
+<link rel="stylesheet" type="text/css"
+	href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+
+<!-- font awesome style -->
+<link href="user/css/font-awesome.min.css" rel="stylesheet" />
+
+<!-- Custom styles for this template -->
+<link href="user/css/style.css" rel="stylesheet" />
+<!-- responsive style -->
+<link href="user/css/responsive.css" rel="stylesheet" />
+
+</head>
+
+<body class="sub_page">
+
+	<div class="hero_area">
+		<!-- header section strats -->
+		<nav th:replace="common/web/header::header"></nav>
+		<!-- end header section -->
+	</div>
+
+	<!-- about section -->
+	<div class="container">
+		<div th:class="${message}" class="alert alert-primary" role="alert">
+			[[${message}]]</div>
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th scope="col">SẢN PHẨM</th>
+					<th scope="col">TÊN SẢN PHẨM</th>
+					<th scope="col">ĐƠN GIÁ</th>
+					<th scope="col">SỐ LƯỢNG</th>
+
+
+				</tr>
+			</thead>
+			<tbody>
+				<th:block th:each="c : ${carts}">
+					<tr>
+						<td>
+							<div>
+								<img width=50px height=50px
+									th:src="@{'data:image/jpeg;base64,'+${c.hinhAnh}}" />
+							</div>
+						</td>
+						<td>[[${c.tenSach}]]</td>
+						<td>[[${#numbers.formatDecimal((c.donGia - (c.donGia * c.giamGia/100)).longValue(), 3, 'COMMA', 0,
+								'DEFAULT')}]]₫</td>
+						<form th:action="@{/cart/update}">
+						<td><input hidden="hidden" th:value="${c.id}" name="id" /> <input
+							type="number" name="soLuong"
+							style="border: 1px solid rgba(128, 128, 128, 0.24);"
+							th:value="${c.soLuong}" onchange="this.form.submit();"></td>
+						
+					</form>		
+						
+				
+						<td><a th:href="@{'cart-delete/'+${c.id}}">
+								<button type="button" class="btn btn-outline-danger btn-sm">
+									<i class="fa fa-trash"></i>
+								</button>
+						</a></td>
+					</tr>
+				</th:block>
+			</tbody>
+		</table>
+		<div class="row" th:if="${totalCartItems!=0}">
+			<div class="col">
+				<p style="font-weight: 700"
+					th:text="'Tổng tiền: '+${#numbers.formatDecimal(amount.longValue(), 3,
+							'COMMA', 0, 'DEFAULT')}+ ' VNĐ'"></p>
+				<a class="btn btn-primary" style="cursor: pointer; color: white;" href="/order-add"
+					onclick="showConfigModalDialog();">Thanh Toán Trực Tiếp</a>
+					<a class="btn btn-primary" style="cursor: pointer; color: white;" href="/orderOnline"
+					onclick="showConfigModalDialog();">Thanh Toán Online</a>
+			</div>
+		</div>
+
+
+
+	</div>
+	<!-- end about section -->
+
+	<!-- footer section -->
+	<footer class="footer_section">
+		<footer id="footer" th:replace="common/web/footer::footer"></footer>
+	</footer>
+	<!-- footer section -->
+
+	<!-- jQery -->
+	<div th:replace="common/web/head::script"></div>
+</body>
+
+</html>
